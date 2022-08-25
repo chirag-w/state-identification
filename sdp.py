@@ -1,10 +1,13 @@
 import picos as pcs
 import numpy as np
+from util import *
 
-def identification_probability(S):
+def state_identification(S,n = 1):
     #Return the maximum success probability for single-copy state identification
     #S = {rho_1,rho_2,...,rho_N}
     
+    S = tensor_power(S,n)
+
     N = len(S) #Number of states in S
     d = S[0].shape[0] #Dimension of states
 
@@ -12,7 +15,7 @@ def identification_probability(S):
 
     I = pcs.Constant(np.diag([1. for i in range(d)]))
 
-    M = [] #POVM Observables
+    M = [] #POVM Operators
     for i in range(N):
         M.append(pcs.HermitianVariable('M'+str(i+1),d))
         sdp.add_constraint(M[i] >> 0)
@@ -30,3 +33,5 @@ def identification_probability(S):
     for i in range(N):
         opt_M.append(M[i].value)
     return float(obj.real),opt_M
+
+

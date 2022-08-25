@@ -13,8 +13,11 @@ S = generate_pauli_eigenstates()
 print("Set of states: ")
 for i in range(6):
     print(S[i])
-p,M = identification_probability(S)
-print("State identification probability: ",p)
-print("Optimal measurement observables: ")
-for i in range(len(M)):
-    print(M[i])
+
+for n in range(1,5):
+    print(n, "copies:")
+    p,M = state_identification(S,n)
+    print("State identification probability: ",p)
+    print("Optimal measurement operators: ")
+    for i in range(len(M)):
+        print(M[i])

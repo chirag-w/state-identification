@@ -7,3 +7,13 @@ def density_matrix(pure_states):
     for i in range(N):
         S.append(np.outer(pure_states[i],pure_states[i].conjugate()))
     return S
+
+def tensor_power(S,n):
+    assert(n >= 1)
+    rho = []
+    N = len(S)
+    for i in range(N):
+        rho.append(S[i].copy())
+        for j in range(n-1):
+            rho[i] = np.kron(rho[i],S[i])
+    return rho
