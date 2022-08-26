@@ -4,8 +4,8 @@ from sdp import *
 
 def generate_pauli_eigenstates():
     #Return the density matrix representations of |0>,|1>,|+>,|->,|+i>,|-i>
-    pure_states = [np.array([1,0],dtype = 'cdouble'),np.array([0,1],dtype = 'cdouble'),np.array([1/np.sqrt(2),1/np.sqrt(2)],dtype = 'cdouble'),
-    np.array([1/np.sqrt(2),-1/np.sqrt(2)],dtype = 'cdouble'),np.array([1/np.sqrt(2),1j/np.sqrt(2)],dtype = 'cdouble'),np.array([1/np.sqrt(2),-1j/np.sqrt(2)],dtype = 'cdouble')
+    pure_states = [np.array([1,0],dtype = complex),np.array([0,1],dtype = complex),np.array([1/np.sqrt(2),1/np.sqrt(2)],dtype = complex),
+    np.array([1/np.sqrt(2),-1/np.sqrt(2)],dtype = complex),np.array([1/np.sqrt(2),1j/np.sqrt(2)],dtype = complex),np.array([1/np.sqrt(2),-1j/np.sqrt(2)],dtype = complex)
     ]
     return density_matrix(pure_states)
 
