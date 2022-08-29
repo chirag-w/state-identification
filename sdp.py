@@ -31,7 +31,7 @@ def state_identification(S,n = 1):
     sol = sdp.solve(solver='cvxopt',verbosity=0)
     opt_M = []
     for i in range(N):
-        opt_M.append(M[i].value)
+        opt_M.append(np.array(M[i].value, dtype = complex))
     return float(obj.real),opt_M
 
 
