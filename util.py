@@ -17,3 +17,7 @@ def tensor_power(S,n):
         for j in range(n-1):
             rho[i] = np.kron(rho[i],S[i])
     return rho
+
+def trace_distance(rho1,rho2):
+    eig = np.abs(np.linalg.eigvalsh(rho1-rho2))
+    return sum(eig)/2
