@@ -1,6 +1,7 @@
 import picos as pcs
 import numpy as np
 from util import *
+from scipy.linalg import sqrtm
 
 def state_identification(S,n = 1):
     #Return the maximum success probability for single-copy state identification
@@ -34,4 +35,21 @@ def state_identification(S,n = 1):
         opt_M.append(np.array(M[i].value, dtype = complex))
     return float(obj.real),opt_M
 
+def pretty_good_measurement(S, n = 1):
+    S = tensor_power(S,n)
 
+    N = len(S) #Number of states in S
+    d = S[0].shape[0] #Dimension of states
+
+    rho = np.zeros((d,d),dtype = complex)
+    for i in range(N):
+        rho += S[i]
+    rho_inv = np.linalg.pinv(rho, hermitian=True)
+    p = 0.0
+    rho_inv_root = sqrtm(rho_inv)
+    M = []
+    for i in range(N):
+        M.append(rho_inv_root @ S[i] @ rho_inv_root)
+        p+= np.trace( M[i] @ S[i])/N
+    p = p.real
+    return p,M

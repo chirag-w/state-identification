@@ -40,8 +40,10 @@ for i in range(20):
 
 for n in range(1,3):
     print(n, "copies:")
+    p,M = pretty_good_measurement(S,n)
+    print("Pretty good measurement success probability: ",p)
     p,M = state_identification(S,n)
-    print("State identification probability: ",p)
-    print("Optimal measurement operators: ")
-    for i in range(len(M)):
-        print(M[i])
+    print("Optimal state identification probability: ",p)
+    # print("Optimal measurement operators: ")
+    # for i in range(len(M)):
+    #     print(M[i])

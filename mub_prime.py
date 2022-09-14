@@ -29,8 +29,10 @@ for i in range(len(S)):
 
 for n in range(1,4):
     print(n, "copies:")
+    p,M = pretty_good_measurement(S,n)
+    print("PGM Success probability: ",p)
     p,M = state_identification(S,n)
-    print("State identification probability: ",p)
-    print("Optimal measurement operators: ")
-    for i in range(len(M)):
-        print(M[i])
+    print("Optimal State identification probability: ",p)
+    # print("Optimal measurement operators: ")
+    # for i in range(len(M)):
+    #     print(M[i])

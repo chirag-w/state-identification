@@ -24,11 +24,24 @@ num_states = []
 tr_dist = []
 prob = []
 
-for n in range(2,7):
-    S = gen_states(n)
-    eps.append(np.trace(S[0]@S[1]))
-    tr_dist.append(trace_distance(S[0],S[1]))
-    num_states.append(n)
-    p,_ = state_identification(S)
-    prob.append(p)
+N = 6
+n = 1
+S = gen_states(N)
+rho = tensor_power(S,n)
+eps.append(np.trace(rho[0]@rho[1]))
+tr_dist.append(trace_distance(rho[0],rho[1]))
+num_states.append(N)
+
+print(num_states)
+print(eps)
+print(tr_dist)
+
+p,M = pretty_good_measurement(S,n)
+#p,M = state_identification(S,n)
+prob.append(p)
 print(prob)
+# for i in range(N):
+#     print('State ',i+1,':')
+#     print(rho[i])
+#     print('Operator ',i+1,':')
+#     print(M[i]-p*rho[i])
