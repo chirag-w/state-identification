@@ -1,7 +1,7 @@
 import picos as pcs
 import numpy as np
 from util import *
-from scipy.linalg import sqrtm
+from scipy.linalg import sqrtm,pinvh
 
 def state_identification(S,n = 1):
     #Return the maximum success probability for single-copy state identification
@@ -44,7 +44,7 @@ def pretty_good_measurement(S, n = 1):
     rho = np.zeros((d,d),dtype = complex)
     for i in range(N):
         rho += S[i]
-    rho_inv = np.linalg.pinv(rho, hermitian=True)
+    rho_inv = np.linalg.pinv(rho, hermitian= True)
     p = 0.0
     rho_inv_root = sqrtm(rho_inv)
     M = []
@@ -52,4 +52,5 @@ def pretty_good_measurement(S, n = 1):
         M.append(rho_inv_root @ S[i] @ rho_inv_root)
         p+= np.trace( M[i] @ S[i])/N
     p = p.real
+    M.append(np.eye(d,dtype = complex)-rho_inv@rho)
     return p,M
