@@ -19,29 +19,24 @@ def gen_states(n):
         cur_state = R@cur_state
     return density_matrix(S)
 
-eps = []
-num_states = []
-tr_dist = []
-prob = []
 
-N = 6
+
+N = 3
 n = 1
 S = gen_states(N)
 rho = tensor_power(S,n)
-eps.append(np.trace(rho[0]@rho[1]))
-tr_dist.append(trace_distance(rho[0],rho[1]))
-num_states.append(N)
+overlap = np.trace(S[0]@S[1])
+tr_dist = trace_distance(rho[0],rho[1])
 
-print(num_states)
-print(eps)
-print(tr_dist)
-
-p,M = pretty_good_measurement(S,n)
-#p,M = state_identification(S,n)
-prob.append(p)
-print(prob)
-# for i in range(N):
-#     print('State ',i+1,':')
-#     print(rho[i])
-#     print('Operator ',i+1,':')
-#     print(M[i]-p*rho[i])
+print(N," states")
+print("epsilon = ",tr_dist)
+print("overlap = ",overlap)
+for n in range(1,6):
+    print(n," copies")
+    p_pgm,_ = pretty_good_measurement(S,n)
+    print("PGM success probability: ",p_pgm)
+    try:
+        p_opt,_ = state_identification(S,n)
+        print("Optimal success probability: ",p_opt)
+    except:
+        print("Could not optimize for n = ",n)

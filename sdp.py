@@ -1,7 +1,7 @@
 import picos as pcs
 import numpy as np
 from util import *
-from scipy.linalg import sqrtm,pinvh
+from scipy.linalg import sqrtm
 
 def state_identification(S,n = 1):
     #Return the maximum success probability for single-copy state identification
