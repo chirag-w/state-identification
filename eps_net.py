@@ -22,11 +22,9 @@ def gen_states(n):
 
 
 N = 3
-n = 1
 S = gen_states(N)
-rho = tensor_power(S,n)
 overlap = np.trace(S[0]@S[1])
-tr_dist = trace_distance(rho[0],rho[1])
+tr_dist = trace_distance(S[0],S[1])
 
 print(N," states")
 print("epsilon = ",tr_dist)
