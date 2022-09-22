@@ -19,22 +19,49 @@ def gen_states(n):
         cur_state = R@cur_state
     return density_matrix(S)
 
+N_min = 2
+N_max = 6
+n_min = 1
+n_max = 5
 
+prob = np.zeros((N_max+1,n_max+1),dtype = float)
+eps = np.zeros(N_max+1,dtype = float)
 
-N = 3
-S = gen_states(N)
-overlap = np.trace(S[0]@S[1])
-tr_dist = trace_distance(S[0],S[1])
+for N in range(N_min,N_max+1):
+    S = gen_states(N)
+    overlap = np.trace(S[0]@S[1])
+    tr_dist = trace_distance(S[0],S[1])
+    eps[N] = tr_dist
+    print(N," states")
+    print("epsilon = ",tr_dist)
+    print("overlap = ",overlap)
+    for n in range(n_min,n_max+1):
+        print(n," copies")
+        p_pgm,_ = pretty_good_measurement(S,n)
+        print("PGM success probability: ",p_pgm)
+        try:
+            p_opt,_ = state_identification(S,n)
+            print("Optimal success probability: ",p_opt)
+        except:
+            print("Could not optimize for n = ",n)
+        prob[N,n] = p_pgm
+        
 
-print(N," states")
-print("epsilon = ",tr_dist)
-print("overlap = ",overlap)
-for n in range(1,6):
-    print(n," copies")
-    p_pgm,_ = pretty_good_measurement(S,n)
-    print("PGM success probability: ",p_pgm)
-    try:
-        p_opt,_ = state_identification(S,n)
-        print("Optimal success probability: ",p_opt)
-    except:
-        print("Could not optimize for n = ",n)
+f1 = plt.figure()
+for N in range(N_min,N_max+1):
+    plt.plot(np.arange(n_min,n_max+1),prob[N,n_min:n_max+1], label = 'eps = '+str(eps[N]))
+plt.title('')
+plt.xlabel('Number of copies')    
+plt.ylabel('Success probability')
+plt.legend(loc = 'lower right')
+plt.show()
+
+f2 = plt.figure()
+for n in range(n_min,n_max+1):
+    plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n))
+plt.title('')
+plt.xlabel('Epsilon')    
+plt.ylabel('Success probability')
+plt.legend(loc = 'lower right')
+plt.show()
+
