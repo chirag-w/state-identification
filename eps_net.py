@@ -45,7 +45,6 @@ for N in range(N_min,N_max+1):
         except:
             print("Could not optimize for n = ",n)
         prob[N,n] = p_pgm
-        
 
 f1 = plt.figure()
 for N in range(N_min,N_max+1):
@@ -57,8 +56,11 @@ plt.legend(loc = 'lower right')
 plt.show()
 
 f2 = plt.figure()
+col = ['blue','orange','green','red','black']
 for n in range(n_min,n_max+1):
-    plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n))
+    plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n), color = col[n%5])
+    a,b = linear_upper_bound(prob[N_min:N_max+1,n],eps[N_min:N_max+1])
+    plt.plot(eps[N_min:N_max+1],a*eps[N_min:N_max+1]+b,linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(a*1000)/1000)+'*epsilon+'+str(int(b*1000)/1000))
 plt.title('')
 plt.xlabel('Epsilon')    
 plt.ylabel('Success probability')
