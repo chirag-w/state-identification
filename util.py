@@ -58,7 +58,7 @@ def quad_upper_bound(y,x):
         for i in range(len(x)):
             error += (coeff[0]*x[i]*x[i]+coeff[1]*x[i]+coeff[2]-y[i])**2
         return error
-    constr = LinearConstraint([[x[i]**2,x[i],1] for i in range(len(x))],np.zeros(len(x)),[np.inf for i in range(len(x))])
+    constr = LinearConstraint([[x[i]**2,x[i],1] for i in range(len(x))],y,[1. for i in range(len(x))])
     x0 = np.array([0,0,0])
     res = minimize(loss,x0,constraints=[constr])
     print(res)

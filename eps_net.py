@@ -22,7 +22,7 @@ def gen_states(n):
 N_min = 2
 N_max = 6
 n_min = 1
-n_max = 1
+n_max = 5
 
 prob = np.zeros((N_max+1,n_max+1),dtype = float)
 eps = np.zeros(N_max+1,dtype = float)
@@ -39,11 +39,11 @@ for N in range(N_min,N_max+1):
         print(n," copies")
         p_pgm,_ = pretty_good_measurement(S,n)
         print("PGM success probability: ",p_pgm)
-        try:
-            p_opt,_ = state_identification(S,n)
-            print("Optimal success probability: ",p_opt)
-        except:
-            print("Could not optimize for n = ",n)
+        # try:
+        #     p_opt,_ = state_identification(S,n)
+        #     print("Optimal success probability: ",p_opt)
+        # except:
+        #     print("Could not optimize for n = ",n)
         prob[N,n] = p_pgm
 
 f1 = plt.figure()
@@ -55,15 +55,17 @@ plt.ylabel('Success probability')
 plt.legend(loc = 'lower right')
 plt.show()
 
-f2 = plt.figure()
 col = ['blue','orange','green','red','black']
 for n in range(n_min,n_max+1):
+    f = plt.figure()
     plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n), color = col[n%5])
     coeff = quad_upper_bound(prob[N_min:N_max+1,n],eps[N_min:N_max+1])
-    plt.plot(eps[N_min:N_max+1],coeff[0]*(eps[N_min:N_max+1]**2)+coeff[1]*eps[N_min:N_max+1]+coeff[2],linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(coeff[2]*1000)/1000)+'*e^2+'+str(int(coeff[1]*1000)/1000)+'*e+'+str(int(coeff[2]*1000)/1000))
-plt.title('')
-plt.xlabel('Epsilon')    
-plt.ylabel('Success probability')
-plt.legend(loc = 'lower right')
-plt.show()
+    x_temp = np.linspace(eps[N_max],1,num = 20)
+    print(x_temp)
+    plt.plot(x_temp,coeff[0]*(x_temp**2)+coeff[1]*x_temp+coeff[2],linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(coeff[2]*1000)/1000)+'*e^2+'+str(int(coeff[1]*1000)/1000)+'*e+'+str(int(coeff[2]*1000)/1000))
+    plt.title('')
+    plt.xlabel('Epsilon')    
+    plt.ylabel('Success probability')
+    plt.legend(loc = 'lower right')
+    plt.show()
 
