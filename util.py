@@ -1,5 +1,6 @@
 import numpy as np
 import pulp as p
+from scipy.optimize import LinearConstraint,minimize
 
 def density_matrix(pure_states):
     #Convert an array of pure states to their density matrix representation
@@ -46,3 +47,19 @@ def linear_upper_bound(y,x):
     print(p.value(a),p.value(b))
 
     return p.value(a),p.value(b)
+
+def quad_upper_bound(y,x):
+    # Determine coefficients of y = ax^2+bx+c
+    # that minimize squared error
+    assert(len(y) == len(x))
+    def loss(coeff):
+        coeff = np.asarray(coeff)
+        error = 0.0
+        for i in range(len(x)):
+            error += (coeff[0]*x[i]*x[i]+coeff[1]*x[i]+coeff[2]-y[i])**2
+        return error
+    constr = LinearConstraint([[x[i]**2,x[i],1] for i in range(len(x))],np.zeros(len(x)),[np.inf for i in range(len(x))])
+    x0 = np.array([0,0,0])
+    res = minimize(loss,x0,constraints=[constr])
+    print(res)
+    return res.x

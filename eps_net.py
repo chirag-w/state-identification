@@ -22,7 +22,7 @@ def gen_states(n):
 N_min = 2
 N_max = 6
 n_min = 1
-n_max = 5
+n_max = 1
 
 prob = np.zeros((N_max+1,n_max+1),dtype = float)
 eps = np.zeros(N_max+1,dtype = float)
@@ -59,8 +59,8 @@ f2 = plt.figure()
 col = ['blue','orange','green','red','black']
 for n in range(n_min,n_max+1):
     plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n), color = col[n%5])
-    a,b = linear_upper_bound(prob[N_min:N_max+1,n],eps[N_min:N_max+1])
-    plt.plot(eps[N_min:N_max+1],a*eps[N_min:N_max+1]+b,linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(a*1000)/1000)+'*epsilon+'+str(int(b*1000)/1000))
+    coeff = quad_upper_bound(prob[N_min:N_max+1,n],eps[N_min:N_max+1])
+    plt.plot(eps[N_min:N_max+1],coeff[0]*(eps[N_min:N_max+1]**2)+coeff[1]*eps[N_min:N_max+1]+coeff[2],linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(coeff[2]*1000)/1000)+'*e^2+'+str(int(coeff[1]*1000)/1000)+'*e+'+str(int(coeff[2]*1000)/1000))
 plt.title('')
 plt.xlabel('Epsilon')    
 plt.ylabel('Success probability')
