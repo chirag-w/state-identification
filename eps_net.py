@@ -39,31 +39,33 @@ for N in range(N_min,N_max+1):
         print(n," copies")
         p_pgm,_ = pretty_good_measurement(S,n)
         print("PGM success probability: ",p_pgm)
-        try:
-            p_opt,_ = state_identification(S,n)
-            print("Optimal success probability: ",p_opt)
-        except:
-            print("Could not optimize for n = ",n)
-        prob[N,n] = p_pgm
+        p = info_theory_upper_bound(S,n)
+        print("Information-theoretic upper bound on success probability: ",p)
+        # try:
+        #     p_opt,_ = state_identification(S,n)
+        #     print("Optimal success probability: ",p_opt)
+        # except:
+        #     print("Could not optimize for n = ",n)
+        # prob[N,n] = p_pgm
 
-f1 = plt.figure()
-for N in range(N_min,N_max+1):
-    plt.plot(np.arange(n_min,n_max+1),prob[N,n_min:n_max+1], label = 'eps = '+str(eps[N]))
-plt.title('')
-plt.xlabel('Number of copies')    
-plt.ylabel('Success probability')
-plt.legend(loc = 'lower right')
-plt.show()
+# f1 = plt.figure()
+# for N in range(N_min,N_max+1):
+#     plt.plot(np.arange(n_min,n_max+1),prob[N,n_min:n_max+1], label = 'eps = '+str(eps[N]))
+# plt.title('')
+# plt.xlabel('Number of copies')    
+# plt.ylabel('Success probability')
+# plt.legend(loc = 'lower right')
+# plt.show()
 
-f2 = plt.figure()
-col = ['blue','orange','green','red','black']
-for n in range(n_min,n_max+1):
-    plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n), color = col[n%5])
-    coeff = quad_upper_bound(prob[N_min:N_max+1,n],eps[N_min:N_max+1])
-    plt.plot(eps[N_min:N_max+1],coeff[0]*(eps[N_min:N_max+1]**2)+coeff[1]*eps[N_min:N_max+1]+coeff[2],linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(coeff[2]*1000)/1000)+'*e^2+'+str(int(coeff[1]*1000)/1000)+'*e+'+str(int(coeff[2]*1000)/1000))
-plt.title('')
-plt.xlabel('Epsilon')    
-plt.ylabel('Success probability')
-plt.legend(loc = 'lower right')
-plt.show()
+# f2 = plt.figure()
+# col = ['blue','orange','green','red','black']
+# for n in range(n_min,n_max+1):
+#     plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n), color = col[n%5])
+#     coeff = quad_upper_bound(prob[N_min:N_max+1,n],eps[N_min:N_max+1])
+#     plt.plot(eps[N_min:N_max+1],coeff[0]*(eps[N_min:N_max+1]**2)+coeff[1]*eps[N_min:N_max+1]+coeff[2],linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(coeff[2]*1000)/1000)+'*e^2+'+str(int(coeff[1]*1000)/1000)+'*e+'+str(int(coeff[2]*1000)/1000))
+# plt.title('')
+# plt.xlabel('Epsilon')    
+# plt.ylabel('Success probability')
+# plt.legend(loc = 'lower right')
+# plt.show()
 

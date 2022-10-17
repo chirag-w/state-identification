@@ -25,13 +25,15 @@ def MUB8_States():
 S = MUB8_States()
 
 for n in range(1,2):
-    print(n, "copies:")
-    p,M = state_identification(S,n)
-    print("State identification probability: ",p)
-    print("Optimal measurement operators: ")
-    for i in range(len(M)):
-        print(M[i])
-        #print(np.linalg.norm(M[i]-S[i]/9)) #Verify that M[i] = S[i]/9
+    p = info_theory_upper_bound(S,n)
+    print("Information-theoretic upper bound on success probability: ",p)
+    # print(n, "copies:")
+    # p,M = state_identification(S,n)
+    # print("State identification probability: ",p)
+    # print("Optimal measurement operators: ")
+    # for i in range(len(M)):
+    #     print(M[i])
+    #     #print(np.linalg.norm(M[i]-S[i]/9)) #Verify that M[i] = S[i]/9
 
 
 

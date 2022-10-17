@@ -54,3 +54,18 @@ def pretty_good_measurement(S, n = 1):
     p = p.real
     M.append(np.eye(d,dtype = complex)-rho_inv@rho)
     return p,M
+
+def info_theory_upper_bound(S,n = 1):
+    #Fano's inequality based upper bound on success probability
+    S = tensor_power(S,n)
+    N = len(S)
+
+    Chi = holevo_info(S)
+
+    def f(eta,N):
+        return bin_entropy(eta)+eta*np.log2(N-1)
+    
+    eta_min = bin_search(f,params = N, low = 0, high = 0.5, error = 0.0001, val = np.log2(N)-Chi)
+
+    return 1-eta_min
+    

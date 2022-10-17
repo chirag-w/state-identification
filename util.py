@@ -1,5 +1,4 @@
 import numpy as np
-import pulp as p
 from scipy.optimize import LinearConstraint,minimize
 
 def density_matrix(pure_states):
@@ -24,30 +23,6 @@ def trace_distance(rho1,rho2):
     eig = np.abs(np.linalg.eigvalsh(rho1-rho2))
     return sum(eig)/2
 
-def linear_upper_bound(y,x):
-    # Determine a,b such that y >= ax+b for all y,x 
-    # that minimizes absolute error
-    assert(len(y) == len(x))
-    LUB = p.LpProblem('Linear upper bound', p.LpMinimize)
-    
-    a = p.LpVariable("a")
-    b = p.LpVariable("b")
-
-    sum_y = sum(y)
-    sum_x = sum(x)
-    LUB += a*sum_x+b-sum_y
-    for i in range(len(y)):
-        LUB += a*x[i]+b >= y[i]
-        LUB += a*x[i]+b >= 0.0
-    #print(LUB)
-
-    status = LUB.solve()
-    #print("Status:" ,p.LpStatus[status])
-
-    print(p.value(a),p.value(b))
-
-    return p.value(a),p.value(b)
-
 def quad_upper_bound(y,x):
     # Determine coefficients of y = ax^2+bx+c
     # that minimize squared error
@@ -63,3 +38,42 @@ def quad_upper_bound(y,x):
     res = minimize(loss,x0,constraints=[constr])
     print(res)
     return res.x
+
+def von_neumann_entropy(rho):
+    p = np.linalg.eigvalsh(rho)
+    S = 0.
+    for i in range(len(p)):
+        if(p[i]<=0):
+            continue
+        S-= p[i]*np.log2(p[i])
+    return S
+
+def bin_entropy(eta):
+    if(eta == 0):
+        return 0
+    return eta*np.log2(1/eta)+(1-eta)*np.log2(1/(1-eta))
+
+def bin_search(f, params, val, low, high, error):
+    #Binary search for x in [low,high] such that val-error<f(x,params)<val+error
+    #For a monotonic increasing function f 
+    x = (low+high)/2
+    while abs(f(x,params)-val) >= error:
+        if f(x,params) > val:
+            high = x
+        elif f(x,params) < val:
+            low = x
+        else:
+            break
+        x = (low+high)/2
+    return x
+
+def holevo_info(S):
+    N = len(S)
+    mixed_state = sum(S)/N
+    Chi = von_neumann_entropy(mixed_state)
+    for i in range(N):
+        Chi -= von_neumann_entropy(S[i])/N
+    return Chi
+
+def f(x,y):
+    return x

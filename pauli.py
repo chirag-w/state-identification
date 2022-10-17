@@ -1,3 +1,4 @@
+from multiprocessing.util import info
 import numpy as np
 from util import *
 from sdp import *
@@ -18,8 +19,10 @@ for n in range(1,6):
     print(n, "copies:")
     p,M = pretty_good_measurement(S,n)
     print("Pretty good measurement success probability: ",p)
-    p,M = state_identification(S,n)
-    print("State identification probability: ",p)
+    p = info_theory_upper_bound(S,n)
+    print("Information-theoretic upper bound on success probability: ",p)
+    # p,M = state_identification(S,n)
+    # print("State identification probability: ",p)
     # print("Optimal measurement operators: ")
     # for i in range(len(M)):
     #     print(M[i])
