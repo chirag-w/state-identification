@@ -20,13 +20,15 @@ def gen_states(n):
     return density_matrix(S)
 
 N_min = 2
-N_max = 6
+N_max = 10
 n_min = 1
-n_max = 5
+n_max = 9
 
-prob = np.zeros((N_max+1,n_max+1),dtype = float)
+prob_pgm = np.zeros((N_max+1,n_max+1),dtype = float)
+prob_info = np.zeros((N_max+1,n_max+1),dtype = float)
 eps = np.zeros(N_max+1,dtype = float)
 
+p_info = []
 for N in range(N_min,N_max+1):
     S = gen_states(N)
     overlap = np.trace(S[0]@S[1])
@@ -39,29 +41,41 @@ for N in range(N_min,N_max+1):
         print(n," copies")
         p_pgm,_ = pretty_good_measurement(S,n)
         print("PGM success probability: ",p_pgm)
-        p = info_theory_upper_bound(S,n)
-        print("Information-theoretic upper bound on success probability: ",p)
+        p_info = info_theory_upper_bound(S,n)
+        print("Information-theoretic upper bound on success probability: ",p_info)
         # try:
         #     p_opt,_ = state_identification(S,n)
         #     print("Optimal success probability: ",p_opt)
         # except:
         #     print("Could not optimize for n = ",n)
-        # prob[N,n] = p_pgm
+        prob_pgm[N,n] = p_pgm
+        prob_info[N,n] = p_info
 
-# f1 = plt.figure()
+f1 = plt.figure()
+for N in range(N_min,N_max+1):
+    plt.plot(np.arange(n_min,n_max+1),prob_pgm[N,n_min:n_max+1], label = 'N = '+str(N)+', eps = '+str(eps[N]))
+plt.title('')
+plt.xlabel('Number of copies')    
+plt.ylabel('Success probability')
+plt.legend(loc = 'lower right')
+plt.show()
+
+
+# f2 = plt.figure()
 # for N in range(N_min,N_max+1):
-#     plt.plot(np.arange(n_min,n_max+1),prob[N,n_min:n_max+1], label = 'eps = '+str(eps[N]))
-# plt.title('')
+#     plt.plot(np.arange(n_min,n_max+1),prob_info[N,n_min:n_max+1]/prob_pgm[N,n_min:n_max+1], label = 'N = '+str(N))
+# plt.title('Tightness of upper bound')
 # plt.xlabel('Number of copies')    
-# plt.ylabel('Success probability')
-# plt.legend(loc = 'lower right')
+# plt.ylabel('UB/LB')
+# plt.legend(loc = 'upper right')
 # plt.show()
+
 
 # col = ['blue','orange','green','red','black']
 # for n in range(n_min,n_max+1):
 #     f = plt.figure()
-#     plt.plot(eps[N_min:N_max+1],prob[N_min:N_max+1,n], label = 'n = '+str(n), color = col[n%5])
-#     coeff = quad_upper_bound(prob[N_min:N_max+1,n],eps[N_min:N_max+1])
+#     plt.plot(eps[N_min:N_max+1],prob_pgm[N_min:N_max+1,n], label = 'n = '+str(n), color = col[n%5])
+#     coeff = quad_upper_bound(prob_pgm[N_min:N_max+1,n],eps[N_min:N_max+1])
 #     x_temp = np.linspace(eps[N_max],1,num = 20)
 #     print(x_temp)
 #     plt.plot(x_temp,coeff[0]*(x_temp**2)+coeff[1]*x_temp+coeff[2],linestyle = 'dashed', color = col[n%5], label = 'p = '+str(int(coeff[2]*1000)/1000)+'*e^2+'+str(int(coeff[1]*1000)/1000)+'*e+'+str(int(coeff[2]*1000)/1000))
