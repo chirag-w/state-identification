@@ -9,26 +9,39 @@ def RX(theta):
     m[0,0] = m[1,1] = np.cos(theta/2)
     m[0,1] = m[1,0] = -np.sin(theta/2)*1j
     return m
-def gen_states(n):
-    theta = 2*np.pi/n
+def gen_states(N):
+    theta = 2*np.pi/N
     R = RX(theta)
     cur_state = np.array([1,0],dtype = complex)
     S = []
-    for i in range(n):
+    for i in range(N):
         S.append(cur_state)
         cur_state = R@cur_state
     return density_matrix(S)
 
-def gen_two_qubit_states(n):
-    states = gen_states(n)
+def gen_two_qubit_states(N):
+    states = gen_states(N)
     S = []
-    for i in range(n):
-        for j in range(n):
+    for i in range(N):
+        for j in range(N):
             S.append(np.kron(states[i],states[j]))
     return S
 
-N_min = 10
-N_max = 10
+def gen_m_qubit_states(N,m):
+    num_states = N**m
+    states = gen_states(N)
+    S = []
+    for i in range(num_states):
+        index = i
+        curr_state = states[index%N] 
+        for j in range(m-1):
+            index = int(index/N)
+            curr_state = np.kron(states[index%N], curr_state)
+        S.append(curr_state)
+    return S
+
+N_min = 2
+N_max = 6
 n_min = 1
 n_max = 1
 
@@ -38,7 +51,8 @@ eps = np.zeros(N_max+1,dtype = float)
 
 p_info = []
 for N in range(N_min,N_max+1):
-    S = gen_two_qubit_states(N)
+    m = 3
+    S = gen_m_qubit_states(N,m)
     tr_dist = trace_distance(S[0],S[1])
     for i in range(len(S)):
         for j in range(i):
